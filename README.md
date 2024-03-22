@@ -101,6 +101,10 @@ ValueNotifierStatefulWidget<bool>(
 );
 ```
 
+### Passing in your own `ValueNotifier`
+
+The `ValueNotifierStatefulWidget` constructor can take a `valueNotifier` parameter, where you pass in your own `ValueNotifier<T>`, which allows the state to be managed externally. This effectively makes `ValueNotifierStatefulWidget` work similarly to `ValueListenableBuilder`.
+
 ## `safeSetState`
 
 This library also exposes `safeSetState` as an extension on `State`, which allows you to call `setState` anytime, including after awaiting an async function in a handler callback, without running into problems with the widget no longer being mounted. `safeSetState` is called when the `ValueNotifier`'s value changes, which is important for making state updates in asynchronous functions, as shown above.

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import './safe_set_state.dart';
@@ -14,10 +15,16 @@ class ValueNotifierStatefulWidget<T> extends StatefulWidget {
   final Widget Function(BuildContext context, ValueNotifier<T> valueNotifier)
       builder;
 
-  const ValueNotifierStatefulWidget({
+  /// An optional [ValueNotifier] that can be passed in, to allow for the
+  /// state to be accessed outside this widget, as opposed to this widget
+  /// managing the state life cycle internally.
+  final ValueNotifier<T>? valueNotifier;
+
+  ValueNotifierStatefulWidget({
     super.key,
     required this.initialValue,
     required this.builder,
+    this.valueNotifier,
   });
 
   @override
@@ -29,21 +36,29 @@ class _ValueNotifierStatefulWidgetState<T>
     extends State<ValueNotifierStatefulWidget<T>> {
   late ValueNotifier<T> valueNotifier;
 
+  void _valueChanged() => safeSetState(() {});
+
   @override
   void initState() {
     super.initState();
-    valueNotifier = ValueNotifier(widget.initialValue)
+    valueNotifier = (widget.valueNotifier ?? ValueNotifier(widget.initialValue))
       // Call `safeSetState` rather than `setState`, because the widget may no
       // longer be mounted when the value changes. Also, the ValueNotifier's
       // value should not be modified during `build`, but if it is, then
       // safeSetState will schedule a post-frame callback rather than calling
       // `setState` immediately (`setState` cannot be called during `build`).
-      ..addListener(() => safeSetState(() {}));
+      ..addListener(_valueChanged);
   }
 
   @override
   void dispose() {
-    valueNotifier.dispose();
+    if (widget.valueNotifier == null) {
+      // ValueNotifier was created by this widget, so dispose it
+      valueNotifier.dispose();
+    } else {
+      // ValueNotifier was passed in, so remove the listener
+      valueNotifier.removeListener(_valueChanged);
+    }
     super.dispose();
   }
 
