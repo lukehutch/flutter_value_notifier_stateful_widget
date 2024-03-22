@@ -10,6 +10,47 @@ Only one state value can be managed per widget, but that covers a wide array of 
 
 ## Usage
 
+### Wrapping state-dependent widgets
+
+Many Flutter widgets (checkboxes, radio buttons, switches) have to be wrapped in a `StatefulWidget` to track their selected state. `ValueNotifierStatefulWidget` dramatically simplifies this.
+
+**Before:**
+
+```dart
+class SwitchWidget extends StatefulWidget {
+  const SwitchWidget({super.key});
+
+  @override
+  State<SwitchWidget> createState() => _SwitchWidgetState();
+}
+
+class _SwitchWidgetState extends State<SwitchWidget> {
+  bool switchedOn = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: switchedOn,
+      onChanged: (bool value) => setState(() => switchedOn = value),
+    );
+  }
+}
+```
+
+**After:**
+
+```dart
+ValueNotifierStatefulWidget(
+  initialValue: false,
+  builder: (context, switchedOn) => Switch(
+    value: switchedOn.value,
+    onChanged: (bool value) => switchedOn.value = value,
+  ),
+)
+```
+
+### Making state changes after async gaps
+
 ```dart
 ValueNotifierStatefulWidget<bool>(
   initialValue: false,
@@ -59,6 +100,8 @@ ValueNotifierStatefulWidget<bool>(
     ),
 );
 ```
+
+## `safeSetState`
 
 This library also exposes `safeSetState` as an extension on `State`, which allows you to call `setState` anytime, including after awaiting an async function in a handler callback, without running into problems with the widget no longer being mounted. `safeSetState` is called when the `ValueNotifier`'s value changes, which is important for making state updates in asynchronous functions, as shown above.
 
