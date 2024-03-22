@@ -72,8 +72,7 @@ extension SafeUpdateState on State {
         setState(updaterFunction);
       }
     }
-    if (SchedulerBinding.instance.schedulerPhase ==
-        SchedulerPhase.persistentCallbacks) {
+    if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
       // Currently building, can't call setState -- add post-frame callback
       SchedulerBinding.instance.addPostFrameCallback((_) => callSetState());
     } else {
