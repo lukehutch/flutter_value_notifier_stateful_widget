@@ -1,7 +1,7 @@
 name: flutter_value_notifier_stateful_widget
 description: A reactive stateful widget for Flutter, backed by a `ValueNotifier` whose lifecycle is managed by the widget.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/lukehutch/flutter_value_notifier_stateful_widget
 
 environment:
   sdk: ^3.2.0
