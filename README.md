@@ -11,7 +11,7 @@ This Flutter package provides an extremely simple state management system for Fl
 ```dart
 ValueNotifierStatefulWidget<bool>(
   initialValue: false,
-  builder: (context, loadingValueNotifier) {
+  builder: (BuildContext context, ValueNotifier<bool> isLoading) {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blue,
@@ -21,7 +21,7 @@ ValueNotifierStatefulWidget<bool>(
       ),
       // Button icon: when loading, show a spinner, otherwise show a
       // checkbox icon
-      icon: loadingValueNotifier.value
+      icon: isLoading.value
           ? const SizedBox(
               width: 15,
               height: 15,
@@ -40,18 +40,18 @@ ValueNotifierStatefulWidget<bool>(
         style: TextStyle(fontSize: 15),
       ),
       // Disable the button when loading
-      onPressed: loadingValueNotifier.value
+      onPressed: isLoading.value
           ? null
           : () async {
               try {
                 // Set loading state to true
-                loadingValueNotifier.value = true;
+                isLoading.value = true;
                 // Call asynchronous function
                 await doSomethingAsynchronously();
               } finally {
                 // Set loading state to false (done inside a finally
                 // block in case the async function throws an error)
-                loadingValueNotifier.value = false;
+                isLoading.value = false;
               }
             },
     );
