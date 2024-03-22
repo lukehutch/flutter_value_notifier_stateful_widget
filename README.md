@@ -4,15 +4,17 @@ This Flutter package provides an extremely simple state management system for Fl
 
 `ValueNotifierStatefulWidget` is more or less a merger of the classes `ValueNotifier` and `ValueListenableBuilder` into one class, which manages the lifecycle of the `ValueNotifier` for you.
 
-`ValueNotifierStatefulWidget` allows you to avoid having to create a new `StatefulWidget` class every time you need to have the display of the widget respond to a simple state change.
+`ValueNotifierStatefulWidget` allows you to avoid having to create a new `StatefulWidget` class every time you need to have the display of the widget respond to a simple state change. This allows you to set up stateful behavior even inside a `StatelessWidget`, which can dramatically simplify your widget code.
+
+Only one state value can be managed per widget, but that covers a wide array of usecases.
 
 ## Usage
 
 ```dart
 ValueNotifierStatefulWidget<bool>(
   initialValue: false,
-  builder: (BuildContext context, ValueNotifier<bool> isLoading) {
-    return ElevatedButton.icon(
+  builder: (BuildContext context, ValueNotifier<bool> isLoading) =>
+    ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
@@ -54,8 +56,7 @@ ValueNotifierStatefulWidget<bool>(
                 isLoading.value = false;
               }
             },
-    );
-  },
+    ),
 );
 ```
 
